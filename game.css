@@ -1,0 +1,591 @@
+/* CSS específico para a área de jogo Snake */
+
+/* Área de Jogo */
+.game-area {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--bg-primary);
+    z-index: 1500;
+    overflow: auto;
+}
+
+.game-area.active {
+    display: block;
+}
+
+.game-container {
+    min-height: 100vh;
+    padding: var(--spacing-lg);
+    display: flex;
+    flex-direction: column;
+}
+
+.game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-lg);
+    background: var(--bg-card);
+    border-radius: 12px;
+    margin-bottom: var(--spacing-lg);
+    border: 1px solid var(--border-color);
+}
+
+.game-info h3 {
+    font-size: var(--font-size-xl);
+    font-weight: 700;
+    color: var(--primary-green);
+    margin-bottom: var(--spacing-xs);
+}
+
+.round-info {
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.btn-leave-game {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-lg);
+    background: var(--danger-red);
+    color: var(--text-primary);
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
+.btn-leave-game:hover {
+    background: #e63946;
+    transform: translateY(-2px);
+}
+
+.game-content {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: var(--spacing-xl);
+    flex: 1;
+}
+
+/* Container das Duas Áreas de Jogo */
+.dual-game-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+    background: var(--bg-card);
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    padding: var(--spacing-lg);
+}
+
+/* Área do Oponente (Superior) */
+.opponent-game-area {
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: var(--spacing-lg);
+}
+
+/* Área do Jogador (Inferior) */
+.player-game-area {
+    padding-top: var(--spacing-lg);
+}
+
+/* Cabeçalho das Seções de Jogo */
+.game-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: var(--bg-secondary);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.game-section-header h4 {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.opponent-stats,
+.player-stats {
+    display: flex;
+    gap: var(--spacing-lg);
+    align-items: center;
+}
+
+.survival-time {
+    font-family: 'Courier New', monospace;
+    font-size: var(--font-size-lg);
+    font-weight: 700;
+    color: var(--primary-green);
+    background: var(--bg-primary);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+}
+
+.score {
+    font-size: var(--font-size-lg);
+    font-weight: 700;
+    color: var(--warning-yellow);
+    background: var(--bg-primary);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+}
+
+/* Canvas do Jogo */
+.game-canvas-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--bg-secondary);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    padding: var(--spacing-md);
+    min-height: 320px;
+}
+
+.opponent-canvas {
+    border-color: var(--danger-red);
+}
+
+.player-canvas {
+    border-color: var(--primary-green);
+}
+
+#opponent-canvas,
+#player-canvas {
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--bg-primary);
+    box-shadow: var(--shadow-light);
+}
+
+#opponent-canvas {
+    border-color: var(--danger-red);
+    box-shadow: 0 0 20px rgba(255, 71, 87, 0.3);
+}
+
+#player-canvas {
+    border-color: var(--primary-green);
+    box-shadow: var(--glow-green);
+}
+
+.game-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    backdrop-filter: blur(5px);
+}
+
+.game-overlay.hidden {
+    display: none;
+}
+
+.overlay-content {
+    text-align: center;
+    color: var(--text-primary);
+}
+
+.overlay-content h3 {
+    font-size: var(--font-size-2xl);
+    font-weight: 700;
+    margin-bottom: var(--spacing-md);
+    color: var(--primary-green);
+}
+
+.overlay-content p {
+    font-size: var(--font-size-lg);
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-lg);
+}
+
+/* Loading Spinner */
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--border-color);
+    border-top: 3px solid var(--primary-green);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Sidebar do Jogo */
+.game-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+
+.game-sidebar > div {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: var(--spacing-lg);
+}
+
+.game-sidebar h4 {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-md);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+/* Placar da Partida */
+.score-display {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-md);
+}
+
+.player-score {
+    text-align: center;
+    flex: 1;
+}
+
+.player-name {
+    display: block;
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-xs);
+}
+
+.score {
+    display: block;
+    font-size: var(--font-size-2xl);
+    font-weight: 800;
+    color: var(--primary-green);
+}
+
+.vs {
+    font-size: var(--font-size-lg);
+    font-weight: 700;
+    color: var(--text-muted);
+    padding: 0 var(--spacing-sm);
+}
+
+/* Resultados das Rodadas */
+.round-result {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-sm) 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.round-result:last-child {
+    border-bottom: none;
+}
+
+.round-result .result {
+    font-weight: 600;
+}
+
+.round-result .result.win {
+    color: var(--primary-green);
+}
+
+.round-result .result.lose {
+    color: var(--danger-red);
+}
+
+.round-result .result.draw {
+    color: var(--warning-yellow);
+}
+
+/* Controles */
+.controls-info {
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
+    line-height: 1.6;
+}
+
+.controls-info p {
+    margin-bottom: var(--spacing-sm);
+}
+
+.controls-info strong {
+    color: var(--primary-green);
+    font-weight: 600;
+}
+
+/* Timer */
+.timer-display {
+    font-size: var(--font-size-3xl);
+    font-weight: 800;
+    color: var(--primary-green);
+    text-align: center;
+    font-family: 'Courier New', monospace;
+    background: var(--bg-secondary);
+    padding: var(--spacing-lg);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    text-shadow: var(--glow-green);
+}
+
+/* Estados do Jogo */
+.game-state-waiting {
+    border-color: var(--warning-yellow);
+    box-shadow: 0 0 20px rgba(255, 165, 2, 0.3);
+}
+
+.game-state-playing {
+    border-color: var(--primary-green);
+    box-shadow: var(--glow-green);
+}
+
+.game-state-finished {
+    border-color: var(--danger-red);
+    box-shadow: 0 0 20px rgba(255, 71, 87, 0.3);
+}
+
+/* Animações do Jogo */
+@keyframes gameStart {
+    0% {
+        transform: scale(0.9);
+        opacity: 0.7;
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.game-starting {
+    animation: gameStart 0.5s ease;
+}
+
+/* Efeitos Visuais */
+.score-increase {
+    animation: scoreIncrease 0.3s ease;
+}
+
+@keyframes scoreIncrease {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+        color: var(--warning-yellow);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Responsividade para Jogos */
+@media (max-width: 1024px) {
+    .game-content {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-lg);
+    }
+    
+    .game-sidebar {
+        flex-direction: row;
+        overflow-x: auto;
+    }
+    
+    .game-sidebar > div {
+        min-width: 250px;
+        flex-shrink: 0;
+    }
+    
+    .dual-game-container {
+        order: 2;
+    }
+    
+    .game-sidebar {
+        order: 1;
+    }
+}
+
+@media (max-width: 768px) {
+    .game-container {
+        padding: var(--spacing-md);
+    }
+    
+    .game-header {
+        flex-direction: column;
+        gap: var(--spacing-md);
+        text-align: center;
+    }
+    
+    .dual-game-container {
+        padding: var(--spacing-md);
+    }
+    
+    .game-section-header {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+        text-align: center;
+    }
+    
+    .opponent-stats,
+    .player-stats {
+        justify-content: center;
+    }
+    
+    #opponent-canvas,
+    #player-canvas {
+        width: 100%;
+        max-width: 350px;
+        height: auto;
+    }
+    
+    .game-sidebar {
+        flex-direction: column;
+    }
+    
+    .score-display {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+    }
+    
+    .vs {
+        transform: rotate(90deg);
+        padding: var(--spacing-sm) 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .game-container {
+        padding: var(--spacing-sm);
+    }
+    
+    .game-header {
+        padding: var(--spacing-md);
+    }
+    
+    .game-info h3 {
+        font-size: var(--font-size-lg);
+    }
+    
+    .dual-game-container {
+        padding: var(--spacing-sm);
+    }
+    
+    #opponent-canvas,
+    #player-canvas {
+        max-width: 280px;
+    }
+    
+    .timer-display {
+        font-size: var(--font-size-2xl);
+        padding: var(--spacing-md);
+    }
+    
+    .game-sidebar > div {
+        padding: var(--spacing-md);
+    }
+}
+
+/* Animações de Partícula para Efeitos */
+.particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: var(--primary-green);
+    border-radius: 50%;
+    pointer-events: none;
+    animation: particleFloat 1s ease-out forwards;
+}
+
+@keyframes particleFloat {
+    0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-50px) scale(0);
+    }
+}
+
+/* Efeito de Vitória */
+.victory-effect {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: var(--font-size-4xl);
+    font-weight: 800;
+    color: var(--primary-green);
+    text-shadow: var(--glow-green);
+    animation: victoryPulse 2s ease-in-out;
+    pointer-events: none;
+    z-index: 10;
+}
+
+@keyframes victoryPulse {
+    0%, 100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.5);
+    }
+    50% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.2);
+    }
+}
+
+/* Efeito de Derrota */
+.defeat-effect {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: var(--font-size-4xl);
+    font-weight: 800;
+    color: var(--danger-red);
+    text-shadow: 0 0 20px rgba(255, 71, 87, 0.5);
+    animation: defeatShake 1s ease-in-out;
+    pointer-events: none;
+    z-index: 10;
+}
+
+@keyframes defeatShake {
+    0%, 100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.5);
+    }
+    10%, 30%, 50%, 70%, 90% {
+        transform: translate(-45%, -50%) scale(1);
+        opacity: 1;
+    }
+    20%, 40%, 60%, 80% {
+        transform: translate(-55%, -50%) scale(1);
+        opacity: 1;
+    }
+}
+
